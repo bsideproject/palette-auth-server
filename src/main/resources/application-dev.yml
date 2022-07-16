@@ -34,8 +34,8 @@ aws:
   paramstore:
     enabled: false
     prefix: /config
-    profile-separator: _
-    name: application
+    profile-separator: '-'
+    name: app-palette
     fail-fast: false
 
 google:
