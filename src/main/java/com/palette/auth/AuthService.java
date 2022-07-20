@@ -9,7 +9,7 @@ import com.palette.auth.dto.LoginRequest;
 import com.palette.auth.dto.TokenResponse;
 import com.palette.auth.infrastructure.jwtTokenProvider.JwtTokenProvider;
 import com.palette.auth.infrastructure.jwtTokenProvider.JwtTokenType;
-import com.palette.auth.infrastructure.oauthManager.IOauthManager;
+import com.palette.auth.infrastructure.oauthManager.OauthManager;
 import com.palette.auth.infrastructure.oauthManager.OauthManagers;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +34,11 @@ public class AuthService {
 
     public TokenResponse createAccessToken(String socialType, LoginRequest loginRequest) {
         SocialType socialLoginType = SocialType.of(socialType);
-        IOauthManager oauthManager = oauthManagers.findOauthManagerBySocialType(socialLoginType);
+        OauthManager oauthManager = oauthManagers.findOauthManagerBySocialType(socialLoginType);
         User userInfo = oauthManager.getUserInfo(loginRequest.getCode());
         Optional<User> user = userRepository.findByEmail(userInfo.getEmail());
         if (user.isPresent()) {
-            if (!user.get().addSocialType(socialLoginType)) {
+            if (user.get().addSocialType(socialLoginType)) {
                 userRepository.save(user.get());
             }
             return TokenResponse.of(jwtTokenProvider.createAccessToken(user.get().getEmail()));

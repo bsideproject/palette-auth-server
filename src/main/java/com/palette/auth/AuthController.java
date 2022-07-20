@@ -1,6 +1,5 @@
 package com.palette.auth;
 
-import com.palette.auth.dto.GoogleUserInfoResponse;
 import com.palette.auth.dto.LoginRequest;
 import com.palette.auth.dto.TokenResponse;
 import com.palette.auth.infrastructure.jwtTokenProvider.JwtRefreshTokenInfo;
@@ -34,16 +33,12 @@ public class AuthController {
         this.jwtRefreshTokenInfo = jwtRefreshTokenInfo;
     }
 
-    @GetMapping("/google/callback")
+    @GetMapping({"/google/callback", "/kakao/callback"})
     public ResponseEntity getGoogleCallback(@RequestParam String code) {
         System.out.println(code);
-        webClient.post().uri("http://localhost:8080/login/GOOGLE").bodyValue(code).exchangeToMono(response -> {
-            System.out.println(response);
-            return response.bodyToMono(GoogleUserInfoResponse.class);
-        });
-
         return ResponseEntity.ok("Hello");
     }
+
 
     @PostMapping("/login/{socialType}")
     public ResponseEntity<TokenResponse> login(@PathVariable String socialType, @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
@@ -56,6 +51,13 @@ public class AuthController {
 
     private ResponseCookie createRefreshTokenCookie(String email) {
         String refreshToken = authService.createRefreshToken(email);
-        return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, refreshToken).sameSite("Lax").secure(true).httpOnly(true).path("/").maxAge(jwtRefreshTokenInfo.getValidityInSeconds().intValue()).domain(cookieDomainValue).build();
+        return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, refreshToken)
+                .sameSite("Lax")
+                .secure(true)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(jwtRefreshTokenInfo.getValidityInSeconds().intValue())
+                .domain(cookieDomainValue)
+                .build();
     }
 }

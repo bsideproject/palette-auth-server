@@ -2,7 +2,7 @@ spring:
   config:
     activate:
       on-profile: dev
-#       import: 'aws-parameterstore:' //파라미터 스토어 활성화시 주석 해제
+    import: 'aws-parameterstore:'
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/palette_auth
@@ -15,35 +15,12 @@ spring:
 
 # Logging
 logging.level.org.springframework.web: DEBUG
-
-# Cookie
-cookie:
-  properties:
-    domain: http://localhost:8080
-
-security:
-  jwt:
-    access-token:
-      secret-key: test
-      expire-length: 300000
-    refresh-token:
-      secret-key: test
-      expire-length: 3600000
+logging.level.io.awspring.cloud.paramstore.AwsParamStorePropertySource: debug
 
 aws:
   paramstore:
-    enabled: false
+    enabled: true
     prefix: /config
     profile-separator: '-'
     name: app-palette
-    fail-fast: false
-
-google:
-  client:
-    id: 1083383014162-l4rm9956ah9u94g6r0p7imjavdsvevfp.apps.googleusercontent.com
-    secret: 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
-    redirect-uri: http://localhost:8080/google/callback
-    grant-type: authorization_code
-  url:
-    access-token: https://oauth2.googleapis.com/token
-    profile: https://www.googleapis.com/oauth2/v2/userinfo
+    fail-fast: true
