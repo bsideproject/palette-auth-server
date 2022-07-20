@@ -48,10 +48,6 @@ public class AuthService {
     }
 
     public String createRefreshToken(String email) {
-        // db에 이미 email에 해당하는 refreshToken이 있다면 삭제하고 새로 생성한다.
-        Optional<RefreshToken> storedRefreshToken = refreshTokenRepository.findByEmail(email);
-        storedRefreshToken.ifPresent(refreshTokenRepository::delete);
-
         String refreshTokenValue = jwtTokenProvider.createRefreshToken(email);
         Long timeToLive = jwtTokenProvider.getTimeToLiveInMilliseconds(JwtTokenType.REFRESH_TOKEN);
         RefreshToken savedRefreshToken = refreshTokenRepository.save(new RefreshToken(email, refreshTokenValue, new Date(new Date().getTime() + timeToLive)));
