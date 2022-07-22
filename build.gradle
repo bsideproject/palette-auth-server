@@ -54,6 +54,9 @@ dependencies {
 	// AWS Pamametor store
 	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-parameter-store-config'
 
+	// spring actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

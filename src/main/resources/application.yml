@@ -3,3 +3,12 @@ spring:
     default: dev
     group:
       dev: dev
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, info
+      path-mapping:
+        health : healthcheck
