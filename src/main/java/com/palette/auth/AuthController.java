@@ -7,6 +7,7 @@ import com.palette.auth.infrastructure.jwtTokenProvider.JwtTokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,14 @@ public class AuthController {
         return ResponseEntity.ok(tokenResponse);
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(@CookieValue(value = REFRESH_TOKEN_COOKIE_NAME, required = false) String refreshToken,
+                                       HttpServletResponse response) {
+        authService.removeRefreshToken(refreshToken);
+        expireRefreshTokenCookie(response);
+        return ResponseEntity.noContent().build();
+    }
+
     private ResponseCookie createRefreshTokenCookie(String email) {
         String refreshToken = authService.createRefreshToken(email);
         return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, refreshToken)
@@ -59,5 +68,16 @@ public class AuthController {
                 .maxAge(jwtRefreshTokenInfo.getValidityInSeconds().intValue())
                 .domain(cookieDomainValue)
                 .build();
+    }
+
+    private void expireRefreshTokenCookie(HttpServletResponse response) {
+        ResponseCookie responseCookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, "")
+                .sameSite("Lax")
+                .secure(true)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        response.addHeader(SET_COOKIE, responseCookie.toString());
     }
 }
