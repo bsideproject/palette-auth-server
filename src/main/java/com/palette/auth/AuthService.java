@@ -54,6 +54,14 @@ public class AuthService {
         return TokenResponse.of(jwtTokenProvider.createAccessToken(savedUser.getEmail()));
     }
 
+    public void validateAccessToken(String accessToken) {
+        jwtTokenProvider.validateToken(accessToken, JwtTokenType.ACCESS_TOKEN);
+    }
+
+    public TokenResponse renewAccessToken(String email) {
+        return TokenResponse.of(jwtTokenProvider.createAccessToken(email));
+    }
+
     public String createRefreshToken(String email) {
         String refreshTokenValue = jwtTokenProvider.createRefreshToken(email);
         Long timeToLive = jwtTokenProvider.getTimeToLiveInMilliseconds(JwtTokenType.REFRESH_TOKEN);
@@ -81,7 +89,7 @@ public class AuthService {
         RefreshToken storedRefreshToken = refreshTokenRepository.findByTokenValue(refreshToken)
                 .orElseThrow(TokenNotValidException::new);
         String email = jwtTokenProvider.getEmailFromPayLoad(refreshToken, JwtTokenType.REFRESH_TOKEN);
-        if(!storedRefreshToken.getEmail().equals(email)){
+        if (!storedRefreshToken.getEmail().equals(email)) {
             throw new TokenNotValidException();
         }
     }
