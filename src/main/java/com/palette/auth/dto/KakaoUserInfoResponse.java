@@ -21,8 +21,8 @@ public class KakaoUserInfoResponse implements UserInfoResponse {
     private String email;
 
     @JsonProperty("kakao_account")
-    private void email(Map<String,Object> kakaoAccount) {
-        email = (String)kakaoAccount.get("email");
+    private void email(Map<String,String> kakaoAccount) {
+        email = kakaoAccount.get("email");
     }
 
     @Override

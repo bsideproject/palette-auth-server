@@ -33,7 +33,7 @@ public class AuthController {
         this.jwtRefreshTokenInfo = jwtRefreshTokenInfo;
     }
 
-    @GetMapping({"/google/callback", "/kakao/callback"})
+    @GetMapping({"/google/callback", "/kakao/callback", "/naver/callback"})
     public ResponseEntity getGoogleCallback(@RequestParam String code) {
         System.out.println(code);
         return ResponseEntity.ok("Hello");

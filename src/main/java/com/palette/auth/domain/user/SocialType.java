@@ -5,7 +5,7 @@ import com.palette.auth.exception.SocialTypeNotFoundException;
 import java.util.Arrays;
 
 public enum SocialType {
-    GOOGLE, KAKAO;
+    GOOGLE, KAKAO, NAVER;
 
     public static SocialType of(String input) {
         return Arrays.stream(values())
