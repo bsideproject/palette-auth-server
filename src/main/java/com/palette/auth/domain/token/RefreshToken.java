@@ -1,18 +1,20 @@
 package com.palette.auth.domain.token;
 
+import com.palette.auth.domain.BaseEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Entity
-public class RefreshToken implements Serializable {
+@NoArgsConstructor
+public class RefreshToken extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,7 +1,6 @@
 package com.palette.auth.infrastructure.oauthManager;
 
 import com.palette.auth.domain.user.User;
-import com.palette.auth.dto.OauthTokenRequest;
 import com.palette.auth.dto.OauthTokenResponse;
 import com.palette.auth.dto.UserInfoResponse;
 import com.palette.auth.exception.OauthApiFailedException;
@@ -9,16 +8,18 @@ import com.palette.auth.exception.UserProfileLoadFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Supplier;
 
 
-public abstract class AbstractOauthManager implements IOauthManager {
+public abstract class AbstractOauthManager implements OauthManager {
     private final WebClient webClient = WebClient.create();
 
-    protected abstract OauthTokenRequest getOauthTokenRequest(String code);
+    protected abstract MultiValueMap<String, String> getOauthTokenRequestBody(String code);
 
     protected abstract String getUrl();
 
@@ -46,12 +47,13 @@ public abstract class AbstractOauthManager implements IOauthManager {
     }
 
     private OauthTokenResponse getAccessToken(String code) {
-        OauthTokenRequest oauthTokenRequest = getOauthTokenRequest(code);
+        MultiValueMap<String, String> formData = getOauthTokenRequestBody(code);
         Mono<OauthTokenResponse> oauthTokenResponseMono = webClient
                 .post()
                 .uri(getUrl())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .bodyValue(oauthTokenRequest)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(formData))
                 .exchangeToMono(response -> {
                     if (!response.statusCode().equals(HttpStatus.OK)) {
                         throw new OauthApiFailedException();

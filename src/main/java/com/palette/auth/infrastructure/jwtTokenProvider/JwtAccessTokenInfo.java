@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtAccessTokenInfo implements IJwtTokenInfo{
+public class JwtAccessTokenInfo implements JwtTokenInfo {
     @Value("${security.jwt.access-token.secret-key}")
     private String secretKey;
 

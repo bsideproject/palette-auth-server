@@ -28,7 +28,8 @@ public class User extends BaseEntity {
     private String email;
 
     @ElementCollection(targetClass = SocialType.class)
-    @CollectionTable
+    @CollectionTable(name = "social_type")
+    @Column(name = "social_type")
     @Enumerated(EnumType.STRING)
     private Collection<SocialType> socialTypes;
 

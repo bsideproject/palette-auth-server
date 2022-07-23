@@ -8,13 +8,13 @@ import java.util.Collection;
 
 @Component
 public class OauthManagers {
-    private final Collection<IOauthManager> IOauthManagerList;
+    private final Collection<OauthManager> IOauthManagerList;
 
-    public OauthManagers(Collection<IOauthManager> IOauthManagerList) {
+    public OauthManagers(Collection<OauthManager> IOauthManagerList) {
         this.IOauthManagerList = IOauthManagerList;
     }
 
-    public IOauthManager findOauthManagerBySocialType(SocialType socialType) {
+    public OauthManager findOauthManagerBySocialType(SocialType socialType) {
         return IOauthManagerList.stream()
                 .filter(IOauthManager -> IOauthManager.isSameSocialType(socialType))
                 .findFirst()

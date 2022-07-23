@@ -1,7 +1,7 @@
 package com.palette.auth.infrastructure.oauthManager;
 
 import com.palette.auth.domain.user.SocialType;
-import com.palette.auth.dto.GoogleUserInfoResponse;
+import com.palette.auth.dto.NaverUserInfoResponse;
 import com.palette.auth.dto.UserInfoResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -10,27 +10,26 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Component
-public class GoogleOauthManager extends AbstractOauthManager {
-
-    @Value("${google.client.id}")
+public class NaverOauthManager extends AbstractOauthManager {
+    @Value("${naver.client.id}")
     private String clientId;
-    @Value("${google.client.secret}")
+    @Value("${naver.client.secret}")
     private String clientSecret;
-    @Value("${google.client.redirect-uri}")
+    @Value("${naver.client.redirect-uri}")
     private String redirectUri;
-    @Value("${google.client.grant-type}")
+    @Value("${naver.client.grant-type}")
     private String grantType;
-    @Value("${google.url.access-token}")
+    @Value("${naver.url.access-token}")
     private String url;
-    @Value("${google.url.profile}")
+    @Value("${naver.url.profile}")
     private String profileUrl;
 
-    @Value(MediaType.APPLICATION_JSON_VALUE)
+    @Value(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     private String contentType;
 
     @Override
     public boolean isSameSocialType(SocialType socialType) {
-        return socialType == SocialType.GOOGLE;
+        return socialType == SocialType.NAVER;
     }
 
     @Override
@@ -40,7 +39,7 @@ public class GoogleOauthManager extends AbstractOauthManager {
 
     @Override
     protected Class<? extends UserInfoResponse> getResponseType() {
-        return GoogleUserInfoResponse.class;
+        return NaverUserInfoResponse.class;
     }
 
     @Override
