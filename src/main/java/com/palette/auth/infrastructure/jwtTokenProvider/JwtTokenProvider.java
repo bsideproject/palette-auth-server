@@ -1,11 +1,16 @@
 package com.palette.auth.infrastructure.jwtTokenProvider;
 
+import com.palette.auth.exception.TokenExpirationException;
+import com.palette.auth.exception.TokenNotValidException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 public class JwtTokenProvider {
@@ -42,6 +47,19 @@ public class JwtTokenProvider {
             return jwtAccessTokenInfo.getSecretKey();
         }
         return jwtRefreshTokenInfo.getSecretKey();
+    }
+
+    public void validateToken(String token, JwtTokenType jwtTokenType) {
+        try {
+            Objects.requireNonNull(token);
+            Jwts.parser()
+                    .setSigningKey(getSecretKey(jwtTokenType))
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpirationException();
+        } catch (NullPointerException | JwtException | IllegalArgumentException e) {
+            throw new TokenNotValidException();
+        }
     }
 
     private String createToken(String email, Long validityTime, String secretKey) {
