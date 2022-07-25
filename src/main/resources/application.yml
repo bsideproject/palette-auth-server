@@ -2,6 +2,7 @@ spring:
   profiles:
     default: dev
     group:
+      local: local
       dev: dev
 
 management:
@@ -12,3 +13,6 @@ management:
         include: health, info
       path-mapping:
         health : healthcheck
+
+server:
+  port: 8081
