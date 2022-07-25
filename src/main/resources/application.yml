@@ -5,5 +5,14 @@ spring:
       local: local
       dev: dev
 
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, info
+      path-mapping:
+        health : healthcheck
+
 server:
   port: 8081
